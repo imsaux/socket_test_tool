@@ -1,6 +1,6 @@
 {
-  "car_interval_s": 1,
+  "car_interval_s": 3,
   "ip": "172.1.10.86",
   "port": 9988,
-  "img": 1
+  "img": 0
 }

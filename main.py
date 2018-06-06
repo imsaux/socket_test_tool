@@ -63,7 +63,7 @@ def get_pic_jcode_data(b_data):
 
 
 def generate_data():
-    data = None
+    data = list()
     r = list()
     index = 1
     with open("data.txt", "r") as fr:
@@ -107,7 +107,7 @@ def generate_data():
 
 class Test(socketserver.BaseRequestHandler):
     def handle(self):
-        print('连接来自:', self.client_address)
+        # print('连接来自:', self.client_address)
         while True:
             d = generate_data()
 
@@ -132,7 +132,7 @@ if __name__ == "__main__":
     setting = None
     with open("main.json", "r") as fr:
         setting = json.load(fr)
-    _interval_ms = int(setting["car_interval_s"])
+    _interval_s = int(setting["car_interval_s"])
     host = setting["ip"]
     port = int(setting["port"])
     _img = int(setting["img"])
