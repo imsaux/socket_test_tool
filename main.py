@@ -30,7 +30,7 @@ info_img = {
         "TrainNo": "",
         "TrainDate": "",
         "Image": {
-            "ChannelNum": "1",
+            "ChannelNum": 1,
             "Width": "",
             "Height": "",
             "Length": ""
@@ -76,6 +76,7 @@ def generate_data():
             current["value"]["OrderNum"] = str(index).zfill(3)
             index += 1
             dd = get_pic_jcode_data(read_pic_data(l.strip()))
+
             if dd is not None:
                 current["value"]["Serial"] = dd
                 if dd[0] == "J":
@@ -91,12 +92,25 @@ def generate_data():
                         current["value"]["TrainKind"] = dd[1:4]
                     else:
                         current["value"]["TrainKind"] = dd[1]
+            else:
+                _kind = l.strip().split('_')[0]
+                _kind_bits = len(_kind)
+                current["value"]["Serial"] = _kind + 'X'*(20-_kind_bits)
+                current["value"]["TrainNo"] = _train_no_
+                if _img == 1:
+                    current["value"]["TrainDate"] = _train_date_
+                if _kind[0] == "K":
+                    current["value"]["TrainKind"] = _kind
+                else:
+                    current["value"]["TrainKind"] = _kind[1]
+
             if _img == 1:
                 file_info = os.stat(l.strip())
                 p = PIL.Image.open(l.strip())
                 current["value"]["Image"]["Width"] = p.width
                 current["value"]["Image"]["Height"] = p.height
                 current["value"]["Image"]["Length"] = file_info.st_size
+                current["value"]["Image"]["ChannelNum"] = 1
                 r.append(json.dumps(current).encode() + b"\r\n")
                 with open(l.strip(), "rb") as frb:
                     r.append("////" + l.strip())
@@ -132,7 +146,7 @@ if __name__ == "__main__":
     setting = None
     with open("main.json", "r") as fr:
         setting = json.load(fr)
-    _interval_ms = int(setting["car_interval_s"])
+    _interval_s = int(setting["car_interval_s"])
     host = setting["ip"]
     port = int(setting["port"])
     _img = int(setting["img"])
